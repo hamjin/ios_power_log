@@ -1,0 +1,22 @@
+name: Injector Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: macos-13
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: build
+      run: clang -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -arch arm64 -dynamiclib -lproc -o inject.dylib inject.c
+    - name: upload
+      uses: actions/upload-artifact@v3
+      with:
+          name: ${{ github.sha }}
+          path: .
