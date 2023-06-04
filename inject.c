@@ -36,8 +36,8 @@ void start_routine(void *arg) {
 
 		syslog(LOG_WARNING, "inject.c: power = %fw\n", ((usage.ri_energy_nj - last) / 1e9) * (1 / mach_time_to_seconds(delta)));
 		syslog(LOG_WARNING, "inject.c: ppower = %fw\n", ((usage.ri_penergy_nj - last_p) / 1e9) * (1 / mach_time_to_seconds(delta)));
-		syslog(LOG_WARNING, "inject.c: pcycles = %fw\n", usage.ri_pcycles);
-		syslog(LOG_WARNING, "inject.c: cycles = %fw\n", usage.ri_cycles);
+		syslog(LOG_WARNING, "inject.c: pcycles = %llu\n", usage.ri_pcycles);
+		syslog(LOG_WARNING, "inject.c: cycles = %llu\n", usage.ri_cycles);
 		last = usage.ri_energy_nj;
 		last_p = usage.ri_penergy_nj;
 		last_mach = delta + last_mach;
