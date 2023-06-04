@@ -37,9 +37,9 @@ void start_routine(void *arg) {
 		uint64_t delta = mach_absolute_time() - last_mach;
 
 		syslog(LOG_WARNING, "inject.c: power = %fw\n", ((usage.ri_energy_nj - last) / 1e9) * (1 / mach_time_to_seconds(delta)));
-		syslog(LOG_WARNING, "inject.c: ppower = %fw\n", ((usage.ri_penergy_nj - last_p) / 1e9) * (1 / mach_time_to_seconds(delta)));
-		syslog(LOG_WARNING, "inject.c: pcycles = %fw\n", (usage.ri_pcycles - last_pcycles) * (1 / mach_time_to_seconds(delta)));
-		syslog(LOG_WARNING, "inject.c: cycles = %fw\n", (usage.ri_cycles - last_cycles) * (1 / mach_time_to_seconds(delta)));
+		syslog(LOG_WARNING, "inject.c: ppower = %f\n", ((usage.ri_penergy_nj - last_p) / 1e9) * (1 / mach_time_to_seconds(delta)));
+		syslog(LOG_WARNING, "inject.c: pcycles = %f\n", (usage.ri_pcycles - last_pcycles) / 1000 * (1 / mach_time_to_seconds(delta)));
+		syslog(LOG_WARNING, "inject.c: cycles = %f\n", (usage.ri_cycles - last_cycles) / 1000 * (1 / mach_time_to_seconds(delta)));
 		last = usage.ri_energy_nj;
 		last_p = usage.ri_penergy_nj;
 		last_pcycles = usage.ri_pcycles;
