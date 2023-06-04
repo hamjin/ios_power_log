@@ -22,19 +22,24 @@ static inline double mach_time_to_seconds(uint64_t mach_time) {
 void start_routine(void *arg) {
 	pthread_set_qos_class_self_np(QOS_CLASS_BACKGROUND, 0);	
 	pid_t pid = getpid();
-	uint64_t last = 0;	
+	uint64_t last = 0;
+	uint64_t last_p = 0;
 	uint64_t last_mach = 0;	
 	struct timespec tim, tim2;
-   tim.tv_sec = 0;
-   tim.tv_nsec = SAMPLE_RATE_NS;
+   	tim.tv_sec = 0;
+  	tim.tv_nsec = SAMPLE_RATE_NS;
 
 	while(1) {
 		rusage_info_current usage;
-		proc_pid_rusage(pid, RUSAGE_INFO_CURRENT, &usage); 
+		proc_pid_rusage(pid, RUSAGE_INFO_CURRENT, (void **)&usage); 
 		uint64_t delta = mach_absolute_time() - last_mach;
 
-		syslog(LOG_WARNING, "inject.c: power = %fw\n", ((usage.ri_penergy_nj - last) / 1e9) * (1 / mach_time_to_seconds(delta)));	
-		last = usage.ri_penergy_nj;
+		syslog(LOG_WARNING, "inject.c: power = %fw\n", ((usage.ri_energy_nj - last) / 1e9) * (1 / mach_time_to_seconds(delta)));
+		syslog(LOG_WARNING, "inject.c: ppower = %fw\n", ((usage.ri_penergy_nj - last_p) / 1e9) * (1 / mach_time_to_seconds(delta)));
+		syslog(LOG_WARNING, "inject.c: pcycles = %fw\n", usage.ri_pcycles);
+		syslog(LOG_WARNING, "inject.c: cycles = %fw\n", usage.ri_cycles);
+		last = usage.ri_energy_nj;
+		last_p = usage.ri_penergy_nj;
 		last_mach = delta + last_mach;
 		nanosleep(&tim , &tim2);
 	}
