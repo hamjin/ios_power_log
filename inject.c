@@ -33,8 +33,8 @@ void start_routine(void *arg) {
 		proc_pid_rusage(pid, RUSAGE_INFO_CURRENT, &usage); 
 		uint64_t delta = mach_absolute_time() - last_mach;
 
-		syslog(LOG_WARNING, "inject.c: power = %fw\n", ((usage.ri_energy_nj - last) / 1e9) * (1 / mach_time_to_seconds(delta)));	
-		last = usage.ri_energy_nj;
+		syslog(LOG_WARNING, "inject.c: power = %fw\n", ((usage.ri_penergy_nj - last) / 1e9) * (1 / mach_time_to_seconds(delta)));	
+		last = usage.ri_penergy_nj;
 		last_mach = delta + last_mach;
 		nanosleep(&tim , &tim2);
 	}
